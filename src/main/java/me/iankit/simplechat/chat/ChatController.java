@@ -15,7 +15,7 @@ public class ChatController {
         this.chatDao = chatDao;
     }
 
-    @GetMapping(value = "/id/{groupId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/{groupId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<Chat> getMessages(@PathVariable String groupId) {
         return chatDao.findByGroupId(groupId)
                 .subscribeOn(Schedulers.boundedElastic());
