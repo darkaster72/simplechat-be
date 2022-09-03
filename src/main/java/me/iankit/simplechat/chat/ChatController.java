@@ -6,9 +6,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.time.LocalDateTime;
-
-@RequestMapping("chat")
+@RequestMapping("chats")
 @RestController
 public class ChatController {
     private final ChatDao chatDao;
@@ -17,15 +15,14 @@ public class ChatController {
         this.chatDao = chatDao;
     }
 
-    @GetMapping(value = "/id/{chatId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<Chat> getMessages(@PathVariable Integer chatId) {
-        return chatDao.findByChatId(chatId)
+    @GetMapping(value = "/id/{groupId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Chat> getMessages(@PathVariable String groupId) {
+        return chatDao.findByGroupId(groupId)
                 .subscribeOn(Schedulers.boundedElastic());
     }
 
     @PostMapping
     public Mono<Chat> newMessage(@RequestBody Chat chat) {
-        chat.setCreatedAt(LocalDateTime.now());
         return chatDao.save(chat);
     }
 }

@@ -6,5 +6,5 @@ import reactor.core.publisher.Flux;
 
 public interface ChatDao extends ReactiveMongoRepository<Chat, String> {
     @Tailable
-    Flux<Chat> findByChatId(Integer chatId);
+    Flux<Chat> findByGroupId(String groupId);
 }
