@@ -16,6 +16,10 @@ public class GroupService {
         return groupDao.save(dto.toEntity());
     }
 
+    public Mono<Group> getGroupById(String groupId) {
+        return groupDao.findById(groupId);
+    }
+
     public Flux<Group> getAllGroups() {
         return groupDao.findAll();
     }

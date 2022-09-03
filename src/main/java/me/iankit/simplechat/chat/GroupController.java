@@ -20,6 +20,11 @@ public class GroupController {
         return groupService.createGroup(dto);
     }
 
+    @GetMapping("/{groupId}")
+    Mono<Group> getGroupById(@PathVariable String groupId) {
+        return groupService.getGroupById(groupId);
+    }
+
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     Flux<Group> getAllGroups() {
         return groupService.getAllGroups()

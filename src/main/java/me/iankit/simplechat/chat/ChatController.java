@@ -1,5 +1,6 @@
 package me.iankit.simplechat.chat;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -8,6 +9,7 @@ import reactor.core.scheduler.Schedulers;
 
 @RequestMapping("chats")
 @RestController
+@Slf4j
 public class ChatController {
     private final ChatDao chatDao;
 
@@ -18,6 +20,7 @@ public class ChatController {
     @GetMapping(value = "/{groupId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<Chat> getMessages(@PathVariable String groupId) {
         return chatDao.findByGroupId(groupId)
+                .log()
                 .subscribeOn(Schedulers.boundedElastic());
     }
 
