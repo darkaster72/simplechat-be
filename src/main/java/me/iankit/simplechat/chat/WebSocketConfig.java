@@ -11,16 +11,15 @@ import java.util.Map;
 
 @Configuration
 public class WebSocketConfig {
-    private final EchoHandler echoHandler;
+    private final ChatHandler chatHandler;
 
-    public WebSocketConfig(EchoHandler echoHandler) {
-        this.echoHandler = echoHandler;
+    public WebSocketConfig(ChatHandler chatHandler) {
+        this.chatHandler = chatHandler;
     }
 
     @Bean
     public HandlerMapping handlerMapping() {
-        Map<String, WebSocketHandler> map = Map.of("/ws/echo", echoHandler);
-        System.out.println("Mapping created");
+        Map<String, WebSocketHandler> map = Map.of("/ws/chat", chatHandler);
         return new SimpleUrlHandlerMapping(map, -1);
     }
 
