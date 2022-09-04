@@ -30,10 +30,17 @@ public class ChatHandler implements WebSocketHandler {
                     try {
                         var action = chatMapper.mapToChatAction(msg);
                         System.out.println("New Action :: " + action.getActionType());
-                        if (action instanceof EnterGroupAction) {
-                            var groupId = ((EnterGroupAction) action).getGroupId();
-                            System.out.println("Enter Group " + groupId);
-                            return chatDao.findByGroupId(groupId).map(chatMapper::stringify);
+
+                        switch (action.getActionType()) {
+                            case ENTER_GROUP: {
+                                var groupId = ((EnterGroupAction) action).getGroupId();
+                                System.out.println("Enter Group " + groupId);
+                                return chatDao.findByGroupId(groupId);
+                            }
+                            case SEND_MESSAGE: {
+                                var chat = ((SendMessageAction) action).toChat();
+                                return chatDao.save(chat).flatMap((c) -> Mono.empty());
+                            }
                         }
                         return Mono.empty();
                     } catch (JsonProcessingException e) {
@@ -41,6 +48,7 @@ public class ChatHandler implements WebSocketHandler {
                         throw new RuntimeException(e);
                     }
                 })
+                .map(chatMapper::stringify)
                 .log()
                 .map(session::textMessage);
 
